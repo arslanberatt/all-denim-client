@@ -9,10 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import {
-  Calculator,
-  TrendingUp,
-} from "lucide-react";
+import { Calculator, TrendingUp } from "lucide-react";
 import ExcelExport from "./ExcelExport";
 
 const ResultsDisplay = ({
@@ -42,7 +39,6 @@ const ResultsDisplay = ({
       </Card>
     );
   }
-
 
   const costItems = [
     { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
