@@ -41,15 +41,14 @@ const ResultsDisplay = ({
   }
 
   const costItems = [
-    { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
-    { label: "İşçilik Maliyeti (TL)", value: results.laborCost || 0 },
-    { label: "İşçilik Maliyeti (EUR)", value: results.laborCostInEUR || 0 },
-    { label: "Malzeme Maliyeti", value: results.materialCost || 0 },
-    { label: "Genel Gider", value: results.overheadCost || 0 },
-    { label: "Kar Marjı", value: results.profitMargin || 0 },
-    { label: "Ara Toplam", value: results.subtotal || 0 },
-    { label: "Komisyon", value: results.commission || 0 },
-    { label: "KDV", value: results.tax || 0 },
+    { label: "Kumaş Birim Fiyatı (€)", value: results.fabricUnitPrice || 0 },
+    { label: "İşçilik Maliyeti (€)", value: results.laborCostInEUR || 0 },
+    { label: "Malzeme Maliyeti (€)", value: results.materialCost || 0 },
+    { label: "Genel Gider (€)", value: results.overheadCost || 0 },
+    { label: "Kar Marjı (€)", value: results.profitMargin || 0 },
+    { label: "Ara Toplam (€)", value: results.subtotal || 0 },
+    { label: "Komisyon (€)", value: results.commission || 0 },
+    { label: "KDV (€)", value: results.tax || 0 },
   ];
 
   return (
@@ -137,6 +136,14 @@ const ResultsDisplay = ({
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
+                  <span className="text-slate-600">EUR Kuru Güncelleme:</span>
+                  <span className="text-slate-700">
+                    {results.eurRateUpdated 
+                      ? new Date(results.eurRateUpdated).toLocaleString("tr-TR")
+                      : "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
                   <span className="text-slate-600">EUR Kuru:</span>
                   <span className="font-semibold text-slate-900">
                     ₺{results.eurRate?.toFixed(2) || "0.00"}
@@ -180,9 +187,9 @@ const ResultsDisplay = ({
                 </TableHeader>
                 <TableBody>
                   {costItems.map((item) => {
-                    // Tüm değerler EUR cinsinden
+                    // Backend'ten gelen değerler zaten EUR cinsinden
                     const eurValue = item.value;
-                    const tryValue = item.value * results.eurRate;
+                    const tryValue = eurValue * results.eurRate;
 
                     return (
                       <TableRow
@@ -201,15 +208,13 @@ const ResultsDisplay = ({
                         <TableCell className="text-right min-w-[100px]">
                           $
                           {(
-                            eurValue *
-                            (results.eurRate / exchangeRates.usdRate)
+                            tryValue / exchangeRates.usdRate
                           ).toFixed(4)}
                         </TableCell>
                         <TableCell className="text-right min-w-[100px]">
                           £
                           {(
-                            eurValue *
-                            (results.eurRate / exchangeRates.gbpRate)
+                            tryValue / exchangeRates.gbpRate
                           ).toFixed(4)}
                         </TableCell>
                       </TableRow>
@@ -232,8 +237,7 @@ const ResultsDisplay = ({
                       $
                       {results.totalPrice
                         ? (
-                            results.totalPrice *
-                            (results.eurRate / exchangeRates.usdRate)
+                            (results.totalPrice * results.eurRate) / exchangeRates.usdRate
                           ).toFixed(4)
                         : "0.0000"}
                     </TableCell>
@@ -241,8 +245,7 @@ const ResultsDisplay = ({
                       £
                       {results.totalPrice
                         ? (
-                            results.totalPrice *
-                            (results.eurRate / exchangeRates.gbpRate)
+                            (results.totalPrice * results.eurRate) / exchangeRates.gbpRate
                           ).toFixed(4)
                         : "0.0000"}
                     </TableCell>

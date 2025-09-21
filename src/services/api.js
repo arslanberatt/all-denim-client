@@ -1,6 +1,5 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  "https://all-denim-server-production.up.railway.app/api";
+  import.meta.env.VITE_API_URL
 
 class ApiService {
   async request(endpoint, options = {}) {
