@@ -13,11 +13,11 @@ const ExcelExport = ({ results, exchangeRates }) => {
     const processCosts = [
       { label: "Kesim İşlemi", value: results.cutProcess || 0 },
       { label: "Dikiş İşlemi", value: results.sationProcess || 0 },
-      { label: "Yıkama İşlemi", value: results.washProcess || 0 },
+      { label: "Yıkama tint İşlemi", value: results.washProcess || 0 },
       { label: "Baskı İşlemi", value: results.printProcess || 0 },
-      { label: "Giydirme İşlemi", value: results.wearProcess || 0 },
+      { label: "Ütü-Paket İşlemi", value: results.wearProcess || 0 },
       { label: "Aksesuar İşlemi", value: results.accessoryProcess || 0 },
-      { label: "Düğme İşlemi", value: results.buttonProcess || 0 },
+      { label: "İlik İşlemi", value: results.buttonProcess || 0 },
     ];
 
     // Maliyet kalemleri
@@ -33,27 +33,31 @@ const ExcelExport = ({ results, exchangeRates }) => {
       { label: "KDV", value: results.tax || 0 },
     ];
 
-    // Genel bilgiler
+    // Genel bilgiler - Daha detaylı ve güzel format
     const generalInfo = [
+      ["=" + "=".repeat(80), "", "", "", ""],
       ["DENIM MALIYET HESAPLAMA RAPORU", "", "", "", ""],
+      ["=" + "=".repeat(80), "", "", "", ""],
       ["", "", "", "", ""],
+      ["📋 RAPOR BİLGİLERİ", "", "", "", ""],
+      ["-" + "-".repeat(50), "", "", "", ""],
       [
-        "Şirket",
+        "🏢 Şirket Adı",
         results.company?.name || results.company || "Bilinmeyen Firma",
         "",
         "",
         "",
       ],
-      ["Paket Tipi", results.packageType || "Bilinmeyen", "", "", ""],
+      ["📦 Paket Tipi", results.packageType || "Bilinmeyen", "", "", ""],
       [
-        "Tarih",
+        "📅 Rapor Tarihi",
         results.date || new Date(results.createdAt).toLocaleDateString("tr-TR"),
         "",
         "",
         "",
       ],
       [
-        "Saat",
+        "🕐 Rapor Saati",
         results.time ||
           new Date(results.createdAt).toLocaleTimeString("tr-TR", {
             hour: "2-digit",
@@ -63,13 +67,16 @@ const ExcelExport = ({ results, exchangeRates }) => {
         "",
         "",
       ],
+      ["🆔 Hesaplama ID", results.id || "N/A", "", "", ""],
       ["", "", "", "", ""],
-      ["DÖVIZ KURLARI", "", "", "", ""],
-      ["EUR/TRY", `₺${results.eurRate?.toFixed(4) || "N/A"}`, "", "", ""],
-      ["USD/TRY", `₺${exchangeRates.usdRate || "N/A"}`, "", "", ""],
-      ["GBP/TRY", `₺${exchangeRates.gbpRate || "N/A"}`, "", "", ""],
+      ["💱 DÖVIZ KURLARI", "", "", "", ""],
+      ["-" + "-".repeat(50), "", "", "", ""],
+      ["🇪🇺 EUR/TRY", `₺${results.eurRate?.toFixed(4) || "N/A"}`, "", "", ""],
+      ["🇺🇸 USD/TRY", `₺${exchangeRates.usdRate || "N/A"}`, "", "", ""],
+      ["🇬🇧 GBP/TRY", `₺${exchangeRates.gbpRate || "N/A"}`, "", "", ""],
       ["", "", "", "", ""],
-      ["İŞLEM MALİYETLERİ", "", "", "", ""],
+      ["⚙️ İŞLEM MALİYETLERİ", "", "", "", ""],
+      ["-" + "-".repeat(50), "", "", "", ""],
     ];
 
     // İşlem maliyetleri tablosu
@@ -99,7 +106,8 @@ const ExcelExport = ({ results, exchangeRates }) => {
     // Maliyet dağılımı
     const costBreakdownInfo = [
       ["", "", "", "", ""],
-      ["MALIYET DAĞILIMI", "", "", "", ""],
+      ["💰 MALIYET DAĞILIMI", "", "", "", ""],
+      ["-" + "-".repeat(50), "", "", "", ""],
     ];
 
     // CSV başlıkları
@@ -166,16 +174,17 @@ const ExcelExport = ({ results, exchangeRates }) => {
       // Boş satır
       ["", "", "", "", ""],
       // Özet bilgiler
-      ["ÖZET BİLGİLER", "", "", "", ""],
+      ["📊 ÖZET BİLGİLER", "", "", "", ""],
+      ["-" + "-".repeat(50), "", "", "", ""],
       [
-        "Toplam Maliyet (EUR)",
+        "🇪🇺 Toplam Maliyet (EUR)",
         `€${results.totalPrice?.toFixed(2) || "0.00"}`,
         "",
         "",
         "",
       ],
       [
-        "Toplam Maliyet (TRY)",
+        "🇹🇷 Toplam Maliyet (TRY)",
         `₺${
           results.totalPrice
             ? (results.totalPrice * results.eurRate).toFixed(2)
@@ -186,7 +195,7 @@ const ExcelExport = ({ results, exchangeRates }) => {
         "",
       ],
       [
-        "Toplam Maliyet (USD)",
+        "🇺🇸 Toplam Maliyet (USD)",
         `$${
           results.totalPrice
             ? (
@@ -200,7 +209,7 @@ const ExcelExport = ({ results, exchangeRates }) => {
         "",
       ],
       [
-        "Toplam Maliyet (GBP)",
+        "🇬🇧 Toplam Maliyet (GBP)",
         `£${
           results.totalPrice
             ? (
@@ -214,13 +223,21 @@ const ExcelExport = ({ results, exchangeRates }) => {
         "",
       ],
       ["", "", "", "", ""],
+      ["📝 RAPOR DETAYLARI", "", "", "", ""],
+      ["-" + "-".repeat(50), "", "", "", ""],
       [
-        "Rapor Oluşturulma Tarihi",
+        "🕒 Rapor Oluşturulma Tarihi",
         new Date().toLocaleString("tr-TR"),
         "",
         "",
         "",
       ],
+      ["🖥️ Sistem", "All Denims Maliyet Hesaplama Sistemi", "", "", ""],
+      ["📧 İletişim", "info@alldenims.com", "", "", ""],
+      ["", "", "", "", ""],
+      ["=" + "=".repeat(80), "", "", "", ""],
+      ["RAPOR SONU", "", "", "", ""],
+      ["=" + "=".repeat(80), "", "", "", ""],
     ];
 
     // CSV içeriğini oluştur
@@ -250,16 +267,18 @@ const ExcelExport = ({ results, exchangeRates }) => {
       .toLowerCase();
 
     const dateStr = new Date().toLocaleDateString("tr-TR").replace(/\//g, "-");
-    const timeStr = new Date().toLocaleTimeString("tr-TR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).replace(/:/g, "-");
+    const timeStr = new Date()
+      .toLocaleTimeString("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      .replace(/:/g, "-");
 
     // Dosyayı indir
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `denim-maliyet-${companyName}-${packageName}-${dateStr}-${timeStr}.csv`;
+    a.download = `${companyName}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

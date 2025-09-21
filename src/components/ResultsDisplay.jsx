@@ -10,14 +10,10 @@ import {
   TableRow,
 } from "./ui/table";
 import {
-  FileSpreadsheet,
   Calculator,
-  Euro,
   TrendingUp,
-  DollarSign,
-  PoundSterling,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import ExcelExport from "./ExcelExport";
 
 const ResultsDisplay = ({
   results,
@@ -47,64 +43,6 @@ const ResultsDisplay = ({
     );
   }
 
-  const exportResults = () => {
-    const csvContent = `
-Company,${results.company?.name || results.company || "Bilinmeyen Firma"}
-Package Type,${results.packageType}
-Date,${results.date || new Date(results.createdAt).toLocaleDateString("tr-TR")}
-EUR Rate,${results.eurRate?.toFixed(2) || "0.00"}
-USD Rate,${exchangeRates.usdRate || "0.00"}
-GBP Rate,${exchangeRates.gbpRate || "0.00"}
-
-Cost Breakdown (EUR):
-Fabric Unit Price,${(results.fabricUnitPrice || 0).toFixed(2)}
-Labor Cost (TL),${(results.laborCost || 0).toFixed(2)}
-Labor Cost (EUR),${(results.laborCostInEUR || 0).toFixed(2)}
-Material Cost,${(results.materialCost || 0).toFixed(2)}
-Overhead Cost,${(results.overheadCost || 0).toFixed(2)}
-Profit Margin,${(results.profitMargin || 0).toFixed(2)}
-Subtotal,${(results.subtotal || 0).toFixed(2)}
-Commission,${(results.commission || 0).toFixed(2)}
-Tax (VAT),${(results.tax || 0).toFixed(2)}
-
-Total EUR,${(results.totalPrice || 0).toFixed(2)}
-Total TRY,${
-      results.totalPrice
-        ? (results.totalPrice * results.eurRate).toFixed(2)
-        : "0.00"
-    }
-Total USD,${
-      results.totalPrice
-        ? (
-            results.totalPrice *
-            (results.eurRate / exchangeRates.usdRate)
-          ).toFixed(2)
-        : "0.00"
-    }
-Total GBP,${
-      results.totalPrice
-        ? (
-            results.totalPrice *
-            (results.eurRate / exchangeRates.gbpRate)
-          ).toFixed(2)
-        : "0.00"
-    }
-    `.trim();
-
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `denim-calculation-${(
-      results.date || new Date(results.createdAt).toLocaleDateString("tr-TR")
-    ).replace(/\//g, "-")}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-
-    toast.success("Sonuçlar başarıyla export edildi");
-  };
 
   const costItems = [
     { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
@@ -219,15 +157,7 @@ Total GBP,${
                 <TrendingUp className="h-5 w-5" />
                 Maliyet Dağılımı
               </span>
-              <Button
-                onClick={exportResults}
-                variant="outline"
-                size="sm"
-                className="transition-all duration-200 hover:scale-105"
-              >
-                <FileSpreadsheet className="h-4 w-4 mr-2" />
-                Excel İndir
-              </Button>
+              <ExcelExport results={results} exchangeRates={exchangeRates} />
             </CardTitle>
           </CardHeader>
           <CardContent>

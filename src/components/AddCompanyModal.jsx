@@ -40,7 +40,6 @@ const AddCompanyModal = ({ isOpen, onClose, onCompanyAdded }) => {
     try {
       setLoading(true);
       const response = await apiService.createCompany(formData);
-      console.log("API Response:", response);
 
       // API response'unu kontrol et
       const newCompany = response.data || response;
@@ -50,8 +49,6 @@ const AddCompanyModal = ({ isOpen, onClose, onCompanyAdded }) => {
       setFormData({ name: "", email: "", address: "", contactPerson: "" });
       onClose();
     } catch (error) {
-      console.error("Firma ekleme hatası:", error);
-      console.error("Error details:", error.message, error.response);
       toast.error(
         `Firma eklenirken hata oluştu: ${error.message || "Bilinmeyen hata"}`
       );

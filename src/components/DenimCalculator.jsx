@@ -93,7 +93,6 @@ const DenimCalculator = () => {
   };
 
   const handleCompanyAdded = async (newCompany) => {
-    console.log("Yeni firma eklendi:", newCompany);
     // Companies listesini yeniden yükle
     await refreshCompanies();
     toast.success("Firma başarıyla eklendi ve listeye eklendi");
