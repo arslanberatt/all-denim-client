@@ -18,6 +18,8 @@ const DenimCalculator = () => {
   const [activeTab, setActiveTab] = useState("calculator");
   const [results, setResults] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState("PACKAGE_050");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // API hooks
   const {
@@ -33,6 +35,7 @@ const DenimCalculator = () => {
   const {
     calculations,
     loading: calculationsLoading,
+    pagination,
     createCalculation,
     setCalculations,
     fetchCalculations,
@@ -40,9 +43,9 @@ const DenimCalculator = () => {
 
   // Initial data loading
   React.useEffect(() => {
-    fetchCalculations();
+    fetchCalculations(currentPage, 10);
     fetchExchangeRate();
-  }, []);
+  }, [currentPage]);
 
   const calculateCosts = async (formData) => {
     try {
@@ -94,6 +97,10 @@ const DenimCalculator = () => {
     // Companies listesini yeniden yükle
     await refreshCompanies();
     toast.success("Firma başarıyla eklendi ve listeye eklendi");
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
   return (
@@ -174,6 +181,10 @@ const DenimCalculator = () => {
               <HistoryTable
                 history={calculations}
                 onViewCalculation={viewCalculation}
+                currentPage={pagination.currentPage}
+                totalPages={pagination.totalPages}
+                onPageChange={handlePageChange}
+                loading={calculationsLoading}
               />
             )}
           </TabsContent>

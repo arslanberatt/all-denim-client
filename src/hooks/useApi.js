@@ -104,22 +104,49 @@ export const useCalculations = () => {
   const [calculations, setCalculations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+  });
 
   const fetchCalculations = async (page = 1, limit = 10, filters = {}) => {
     try {
       setLoading(true);
-      const data = await apiService.getCalculations(page, limit, filters);
+      const response = await apiService.getCalculations(page, limit, filters);
 
       // API'den gelen veriyi kontrol et
-      if (Array.isArray(data)) {
-        setCalculations(data);
+      if (response && Array.isArray(response.data)) {
+        setCalculations(response.data);
+        setPagination({
+          currentPage: response.pagination?.currentPage || page,
+          totalPages: response.pagination?.totalPages || 1,
+          totalItems: response.pagination?.totalItems || response.data.length,
+        });
+      } else if (Array.isArray(response)) {
+        setCalculations(response);
+        setPagination({
+          currentPage: page,
+          totalPages: 1,
+          totalItems: response.length,
+        });
       } else {
         setCalculations([]);
+        setPagination({
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 0,
+        });
       }
     } catch (err) {
       setError(err.message);
       toast.error("Hesaplamalar yüklenirken hata oluştu");
       setCalculations([]);
+      setPagination({
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+      });
     } finally {
       setLoading(false);
     }
@@ -148,6 +175,7 @@ export const useCalculations = () => {
     calculations,
     loading,
     error,
+    pagination,
     fetchCalculations,
     createCalculation,
     setCalculations,

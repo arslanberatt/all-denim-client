@@ -9,10 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { History, Eye, Calculator } from "lucide-react";
+import { History, Eye, Calculator, ChevronLeft, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
 
-const HistoryTable = ({ history, onViewCalculation }) => {
+const HistoryTable = ({ 
+  history, 
+  onViewCalculation, 
+  currentPage = 1, 
+  totalPages = 1, 
+  onPageChange,
+  loading = false 
+}) => {
   if (history.length === 0) {
     return (
       <Card className="shadow-sm border border-slate-200">
@@ -126,7 +133,7 @@ const HistoryTable = ({ history, onViewCalculation }) => {
                   </TableCell>
                   <TableCell className="text-right font-semibold text-slate-900 hidden sm:table-cell">
                     ₺
-                    {calc.totalPrice
+                    {calc.totalPrice && calc.eurRate
                       ? (calc.totalPrice * calc.eurRate).toLocaleString()
                       : "0"}
                   </TableCell>
@@ -146,6 +153,37 @@ const HistoryTable = ({ history, onViewCalculation }) => {
             </TableBody>
           </Table>
         </div>
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6 px-2">
+            <div className="text-sm text-slate-600">
+              Sayfa {currentPage} / {totalPages}
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage <= 1 || loading}
+                className="flex items-center gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Önceki
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages || loading}
+                className="flex items-center gap-1"
+              >
+                Sonraki
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

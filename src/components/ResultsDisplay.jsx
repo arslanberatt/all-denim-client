@@ -108,14 +108,13 @@ Total GBP,${
 
   const costItems = [
     { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
-    { label: "İşçilik Maliyeti (TL)", value: results.laborCost || 0 },
-    { label: "İşçilik Maliyeti (EUR)", value: results.laborCostInEUR || 0 },
-    { label: "Malzeme Maliyeti", value: results.materialCost || 0 },
-    { label: "Genel Gider", value: results.overheadCost || 0 },
-    { label: "Kar Marjı", value: results.profitMargin || 0 },
-    { label: "Ara Toplam", value: results.subtotal || 0 },
-    { label: "Komisyon", value: results.commission || 0 },
-    { label: "KDV", value: results.tax || 0 },
+    { label: "Kesim İşlemi", value: results.cuttingCost || 0 },
+    { label: "Dikiş İşlemi", value: results.sewingCost || 0 },
+    { label: "Yıkama İşlemi", value: results.washingCost || 0 },
+    { label: "Baskı İşlemi", value: results.printingCost || 0 },
+    { label: "Giydirme İşlemi", value: results.finishingCost || 0 },
+    { label: "Aksesuar İşlemi", value: results.accessoryCost || 0 },
+    { label: "Düğme İşlemi", value: results.buttonCost || 0 },
   ];
 
   return (
@@ -254,15 +253,9 @@ Total GBP,${
                 </TableHeader>
                 <TableBody>
                   {costItems.map((item) => {
-                    // İşçilik maliyeti TL ise farklı hesaplama yap
-                    const isLaborCostTL =
-                      item.label === "İşçilik Maliyeti (TL)";
-                    const eurValue = isLaborCostTL
-                      ? item.value / results.eurRate
-                      : item.value;
-                    const tryValue = isLaborCostTL
-                      ? item.value
-                      : item.value * results.eurRate;
+                    // Tüm değerler EUR cinsinden
+                    const eurValue = item.value;
+                    const tryValue = item.value * results.eurRate;
 
                     return (
                       <TableRow
