@@ -108,13 +108,14 @@ Total GBP,${
 
   const costItems = [
     { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
-    { label: "Kesim İşlemi", value: results.cutProcess || 0 },
-    { label: "Dikiş İşlemi", value: results.sationProcess || 0 },
-    { label: "Yıkama İşlemi", value: results.washProcess || 0 },
-    { label: "Baskı İşlemi", value: results.printProcess || 0 },
-    { label: "Giydirme İşlemi", value: results.wearProcess || 0 },
-    { label: "Aksesuar İşlemi", value: results.accessoryProcess || 0 },
-    { label: "Düğme İşlemi", value: results.buttonProcess || 0 },
+    { label: "İşçilik Maliyeti (TL)", value: results.laborCost || 0 },
+    { label: "İşçilik Maliyeti (EUR)", value: results.laborCostInEUR || 0 },
+    { label: "Malzeme Maliyeti", value: results.materialCost || 0 },
+    { label: "Genel Gider", value: results.overheadCost || 0 },
+    { label: "Kar Marjı", value: results.profitMargin || 0 },
+    { label: "Ara Toplam", value: results.subtotal || 0 },
+    { label: "Komisyon", value: results.commission || 0 },
+    { label: "KDV", value: results.tax || 0 },
   ];
 
   return (
@@ -225,7 +226,7 @@ Total GBP,${
                 className="transition-all duration-200 hover:scale-105"
               >
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
-                Export
+                Excel İndir
               </Button>
             </CardTitle>
           </CardHeader>

@@ -9,6 +9,17 @@ const ExcelExport = ({ results, exchangeRates }) => {
       return;
     }
 
+    // İşlem maliyetleri
+    const processCosts = [
+      { label: "Kesim İşlemi", value: results.cutProcess || 0 },
+      { label: "Dikiş İşlemi", value: results.sationProcess || 0 },
+      { label: "Yıkama İşlemi", value: results.washProcess || 0 },
+      { label: "Baskı İşlemi", value: results.printProcess || 0 },
+      { label: "Giydirme İşlemi", value: results.wearProcess || 0 },
+      { label: "Aksesuar İşlemi", value: results.accessoryProcess || 0 },
+      { label: "Düğme İşlemi", value: results.buttonProcess || 0 },
+    ];
+
     // Maliyet kalemleri
     const costItems = [
       { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
@@ -58,6 +69,36 @@ const ExcelExport = ({ results, exchangeRates }) => {
       ["USD/TRY", `₺${exchangeRates.usdRate || "N/A"}`, "", "", ""],
       ["GBP/TRY", `₺${exchangeRates.gbpRate || "N/A"}`, "", "", ""],
       ["", "", "", "", ""],
+      ["İŞLEM MALİYETLERİ", "", "", "", ""],
+    ];
+
+    // İşlem maliyetleri tablosu
+    const processHeaders = [
+      "İşlem Türü",
+      "Maliyet (TRY)",
+      "Maliyet (EUR)",
+      "Maliyet (USD)",
+      "Maliyet (GBP)",
+    ];
+
+    const processData = processCosts.map((item) => {
+      const tryValue = item.value;
+      const eurValue = item.value / results.eurRate;
+      const usdValue = eurValue * (results.eurRate / exchangeRates.usdRate);
+      const gbpValue = eurValue * (results.eurRate / exchangeRates.gbpRate);
+
+      return [
+        item.label,
+        `₺${tryValue.toFixed(4)}`,
+        `€${eurValue.toFixed(4)}`,
+        `$${usdValue.toFixed(4)}`,
+        `£${gbpValue.toFixed(4)}`,
+      ];
+    });
+
+    // Maliyet dağılımı
+    const costBreakdownInfo = [
+      ["", "", "", "", ""],
       ["MALIYET DAĞILIMI", "", "", "", ""],
     ];
 
@@ -73,6 +114,9 @@ const ExcelExport = ({ results, exchangeRates }) => {
     // CSV verileri
     const csvData = [
       ...generalInfo,
+      processHeaders,
+      ...processData,
+      ...costBreakdownInfo,
       headers,
       ...costItems.map((item) => {
         const isLaborCostTL = item.label === "İşçilik Maliyeti (TL)";
@@ -206,12 +250,16 @@ const ExcelExport = ({ results, exchangeRates }) => {
       .toLowerCase();
 
     const dateStr = new Date().toLocaleDateString("tr-TR").replace(/\//g, "-");
+    const timeStr = new Date().toLocaleTimeString("tr-TR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).replace(/:/g, "-");
 
     // Dosyayı indir
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${companyName}-${packageName}-${dateStr}.csv`;
+    a.download = `denim-maliyet-${companyName}-${packageName}-${dateStr}-${timeStr}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
