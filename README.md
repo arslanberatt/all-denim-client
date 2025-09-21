@@ -4,7 +4,7 @@ Denim üretim maliyetlerini hesaplayan React uygulaması.
 
 ## 🚀 Canlı Demo
 
-**[https://all-denim-client.vercel.app/](https://all-denim-client.vercel.app/)**
+**[https://alldenims.vercel.app/](https://all-denim-client.vercel.app/)**
 
 ## 🚀 Özellikler
 

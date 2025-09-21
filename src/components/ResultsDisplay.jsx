@@ -108,13 +108,13 @@ Total GBP,${
 
   const costItems = [
     { label: "Kumaş Birim Fiyatı", value: results.fabricUnitPrice || 0 },
-    { label: "Kesim İşlemi", value: results.cuttingCost || 0 },
-    { label: "Dikiş İşlemi", value: results.sewingCost || 0 },
-    { label: "Yıkama İşlemi", value: results.washingCost || 0 },
-    { label: "Baskı İşlemi", value: results.printingCost || 0 },
-    { label: "Giydirme İşlemi", value: results.finishingCost || 0 },
-    { label: "Aksesuar İşlemi", value: results.accessoryCost || 0 },
-    { label: "Düğme İşlemi", value: results.buttonCost || 0 },
+    { label: "Kesim İşlemi", value: results.cutProcess || 0 },
+    { label: "Dikiş İşlemi", value: results.sationProcess || 0 },
+    { label: "Yıkama İşlemi", value: results.washProcess || 0 },
+    { label: "Baskı İşlemi", value: results.printProcess || 0 },
+    { label: "Giydirme İşlemi", value: results.wearProcess || 0 },
+    { label: "Aksesuar İşlemi", value: results.accessoryProcess || 0 },
+    { label: "Düğme İşlemi", value: results.buttonProcess || 0 },
   ];
 
   return (
